@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import exifr from 'exifr';
 import { UploadCloud, Loader2, CheckCircle, MapPin, Camera, Image, X } from 'lucide-react';
+import { API_URL } from '../config';
 
 const catAz = { 'Roads & Transport': 'Yollar və Nəqliyyat', 'Utilities': 'Kommunal Xidmətlər', 'Parks & Environment': 'Parklar və Ətraf Mühit', 'Public Safety': 'İctimai Təhlükəsizlik', 'Waste Management': 'Tullantıların İdarə Edilməsi', 'Building & Infrastructure': 'Bina və İnfrastruktur', 'Other': 'Digər' };
 const priAz = { 'Low': 'Aşağı', 'Medium': 'Orta', 'High': 'Yüksək', 'Critical': 'Kritik' };
@@ -132,7 +133,7 @@ export default function SubmitAppeal() {
         formData.append('media', file);
 
         try {
-            const res = await axios.post('http://localhost:5000/api/appeals/analyze', formData, {
+            const res = await axios.post(`${API_URL}/api/appeals/analyze`, formData, {
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('asanToken')}`,
                     'Content-Type': 'multipart/form-data'
@@ -172,7 +173,7 @@ export default function SubmitAppeal() {
                     confidence_scores: analysisResult.analysis.confidence_scores
                 }
             };
-            const res = await axios.post('http://localhost:5000/api/appeals', payload, {
+            const res = await axios.post(`${API_URL}/api/appeals`, payload, {
                 headers: { Authorization: `Bearer ${localStorage.getItem('asanToken')}` }
             });
             if (res.data.success) {

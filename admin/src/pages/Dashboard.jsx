@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { Loader2, AlertCircle, Clock, CheckCircle2 } from 'lucide-react';
+import { API_URL } from '../config';
 
 const catAz = { 'Roads & Transport': 'Yollar və Nəqliyyat', 'Utilities': 'Kommunal Xidmətlər', 'Parks & Environment': 'Parklar və Ətraf Mühit', 'Public Safety': 'İctimai Təhlükəsizlik', 'Waste Management': 'Tullantıların İdarə Edilməsi', 'Building & Infrastructure': 'Bina və İnfrastruktur', 'Other': 'Digər' };
 const priAz = { 'Low': 'Aşağı', 'Medium': 'Orta', 'High': 'Yüksək', 'Critical': 'Kritik' };
@@ -15,7 +16,7 @@ export default function Dashboard() {
     useEffect(() => {
         const fetchAppeals = async () => {
             try {
-                const res = await axios.get('http://localhost:5000/api/appeals', {
+                const res = await axios.get(`${API_URL}/api/appeals`, {
                     headers: { Authorization: `Bearer ${localStorage.getItem('asanAdminToken')}` }
                 });
                 if (res.data.success) {

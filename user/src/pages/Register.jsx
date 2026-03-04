@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
+import { API_URL } from '../config';
 
 export default function Register() {
     const navigate = useNavigate();
@@ -15,7 +16,7 @@ export default function Register() {
             return;
         }
         try {
-            const res = await axios.post('http://localhost:5000/api/auth/register', { ...form, role: 'citizen' });
+            const res = await axios.post(`${API_URL}/api/auth/register`, { ...form, role: 'citizen' });
             if (res.data.success) {
                 const { token, _id, firstName, lastName } = res.data.data;
                 localStorage.setItem('asanToken', token);

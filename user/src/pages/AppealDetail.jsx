@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import axios from 'axios';
 import { Loader2, AlertCircle, Clock, CheckCircle2, MapPin, ArrowLeft } from 'lucide-react';
+import { API_URL } from '../config';
 
 const catAz = { 'Roads & Transport': 'Yollar və Nəqliyyat', 'Utilities': 'Kommunal Xidmətlər', 'Parks & Environment': 'Parklar və Ətraf Mühit', 'Public Safety': 'İctimai Təhlükəsizlik', 'Waste Management': 'Tullantıların İdarə Edilməsi', 'Building & Infrastructure': 'Bina və İnfrastruktur', 'Other': 'Digər' };
 const priAz = { 'Low': 'Aşağı', 'Medium': 'Orta', 'High': 'Yüksək', 'Critical': 'Kritik' };
@@ -14,7 +15,7 @@ export default function AppealDetail() {
     useEffect(() => {
         const fetchAppeal = async () => {
             try {
-                const res = await axios.get(`http://localhost:5000/api/appeals/${id}`, {
+                const res = await axios.get(`${API_URL}/api/appeals/${id}`, {
                     headers: { Authorization: `Bearer ${localStorage.getItem('asanToken')}` }
                 });
                 if (res.data.success) setAppeal(res.data.data.appeal);
@@ -50,7 +51,7 @@ export default function AppealDetail() {
             <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
                 {/* Image */}
                 {appeal.initialMediaId?.url && (
-                    <img src={`http://localhost:5000${appeal.initialMediaId.url}`} alt="Müraciət" className="w-full max-h-80 object-cover" />
+                    <img src={`${API_URL}${appeal.initialMediaId.url}`} alt="Müraciət" className="w-full max-h-80 object-cover" />
                 )}
 
                 <div className="p-4 sm:p-6 space-y-4 sm:space-y-6">

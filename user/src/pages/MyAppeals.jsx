@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { Loader2, Clock, CheckCircle2, AlertCircle, PlusCircle } from 'lucide-react';
+import { API_URL } from '../config';
 
 const catAz = { 'Roads & Transport': 'Yollar və Nəqliyyat', 'Utilities': 'Kommunal Xidmətlər', 'Parks & Environment': 'Parklar və Ətraf Mühit', 'Public Safety': 'İctimai Təhlükəsizlik', 'Waste Management': 'Tullantıların İdarə Edilməsi', 'Building & Infrastructure': 'Bina və İnfrastruktur', 'Other': 'Digər' };
 const priAz = { 'Low': 'Aşağı', 'Medium': 'Orta', 'High': 'Yüksək', 'Critical': 'Kritik' };
@@ -14,7 +15,7 @@ export default function MyAppeals() {
     useEffect(() => {
         const fetchAppeals = async () => {
             try {
-                const res = await axios.get('http://localhost:5000/api/appeals', {
+                const res = await axios.get(`${API_URL}/api/appeals`, {
                     headers: { Authorization: `Bearer ${localStorage.getItem('asanToken')}` }
                 });
                 if (res.data.success) {
@@ -65,7 +66,7 @@ export default function MyAppeals() {
                     {appeals.map((appeal) => (
                         <Link key={appeal._id} to={`/appeals/${appeal._id}`} className="block bg-white p-4 sm:p-5 rounded-2xl shadow-sm border border-slate-200 flex gap-3 sm:gap-4 hover:border-blue-300 hover:shadow-md transition cursor-pointer">
                             {appeal.initialMediaId?.url && (
-                                <img src={`http://localhost:5000${appeal.initialMediaId.url}`} alt="" className="w-16 h-16 sm:w-24 sm:h-24 rounded-xl object-cover bg-slate-100 shrink-0" />
+                                <img src={`${API_URL}${appeal.initialMediaId.url}`} alt="" className="w-16 h-16 sm:w-24 sm:h-24 rounded-xl object-cover bg-slate-100 shrink-0" />
                             )}
                             <div className="flex-1 min-w-0">
                                 <div className="flex items-start justify-between gap-4">

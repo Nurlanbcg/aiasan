@@ -51,6 +51,11 @@ app.use((req, res, next) => {
     next();
 });
 
+// Health check endpoint for Railway
+app.get('/health', (req, res) => {
+    res.status(200).json({ status: 'ok', timestamp: new Date().toISOString() });
+});
+
 // Routes
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);

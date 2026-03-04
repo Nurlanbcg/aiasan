@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Plus, Pencil, Trash2, X, Loader2 } from 'lucide-react';
+import { API_URL } from '../config';
 
-const API = 'http://localhost:5000/api/auth';
+const API = `${API_URL}/api/auth`;
 const headers = () => ({ Authorization: `Bearer ${localStorage.getItem('asanAdminToken')}` });
 
 export default function Users() {
