@@ -48,7 +48,7 @@ export default function Login() {
                         placeholder="Email"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
-                        className="w-full bg-transparent border border-white/20 text-white placeholder-purple-300 p-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500"
+                        className="w-full bg-white/10 border border-white/20 text-white placeholder-purple-300 p-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500"
                         required
                     />
                     <input
@@ -56,7 +56,7 @@ export default function Login() {
                         placeholder="Şifrə"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
-                        className="w-full bg-transparent border border-white/20 text-white placeholder-purple-300 p-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500"
+                        className="w-full bg-white/10 border border-white/20 text-white placeholder-purple-300 p-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500"
                         required
                     />
                     <button type="submit" className="w-full text-white p-3 rounded-xl font-bold hover:opacity-90 transition" style={{ backgroundColor: '#7852ff' }}>
