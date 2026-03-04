@@ -23,7 +23,7 @@ export default function Sidebar() {
         <>
             <div className="p-6 border-b border-slate-700 flex items-center justify-between">
                 <div>
-                    <h1 className="text-xl font-bold tracking-tight">ASAN Admin</h1>
+                    <h1 className="text-xl font-bold tracking-tight">ASAN AI Hub Admin</h1>
                     {user.firstName && (
                         <p className="text-sm text-slate-400 mt-1">{user.firstName} {user.lastName}</p>
                     )}
