@@ -84,6 +84,12 @@ import User from './src/models/User.js';
 
 const PORT = process.env.PORT || 5000;
 
+// Start server immediately so health check passes
+app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+});
+
+// Connect to MongoDB
 mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost:27017/aiasan')
     .then(async () => {
         console.log('Connected to MongoDB');
@@ -105,10 +111,6 @@ mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost:27017/aiasan')
         } catch (seedErr) {
             console.error('Failed to seed default admin user:', seedErr.message);
         }
-
-        app.listen(PORT, () => {
-            console.log(`Server running on port ${PORT}`);
-        });
     })
     .catch((err) => {
         console.error('Failed to connect to MongoDB', err);
