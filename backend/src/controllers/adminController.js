@@ -2,6 +2,7 @@ import Appeal from '../models/Appeal.js';
 import Media from '../models/Media.js';
 import { verifyResolutionMedia } from '../services/geminiService.js';
 import path from 'path';
+import exifr from 'exifr';
 // @route   POST /api/appeals/:id/verify
 // @desc    Admin uploads resolution media and getting AI verification
 // @access  Private (Admin only)
@@ -30,11 +31,35 @@ export const verifyResolution = async (req, res) => {
         const originalMediaPath = path.join(process.cwd(), originalMediaUrl); // use exact absolute path
         const originalMimeType = appeal.initialMediaId.mimeType;
 
+        // Check EXIF metadata of resolution image — AI-generated images lack camera data
+        // Skip EXIF check if photo was captured from browser camera (canvas strips EXIF)
+        let exifFlaggedAsAI = false;
+        const isCameraCapture = req.body.capturedFromCamera === 'true';
+        if (!isCameraCapture) {
+            try {
+                const exifData = await exifr.parse(resolutionMediaPath, { pick: ['Make', 'Model', 'Software', 'DateTimeOriginal'] });
+                if (!exifData || (!exifData.Make && !exifData.Model)) {
+                    exifFlaggedAsAI = true;
+                    console.log('[AI Detection] No camera EXIF data found — likely AI-generated');
+                }
+            } catch {
+                exifFlaggedAsAI = true;
+                console.log('[AI Detection] Could not parse EXIF — likely AI-generated');
+            }
+        }
+
         // AI comparison
         const verificationResult = await verifyResolutionMedia(
             originalMediaPath, originalMimeType,
             resolutionMediaPath, resolutionMimeType
         );
+
+        // If EXIF check flagged as AI or Gemini detected it, mark as AI-generated
+        if (exifFlaggedAsAI || verificationResult.is_ai_generated) {
+            verificationResult.is_ai_generated = true;
+            verificationResult.issue_resolved = false;
+            verificationResult.mismatch_warning = true;
+        }
 
         // Save resolution media record
         const resMedia = await Media.create({

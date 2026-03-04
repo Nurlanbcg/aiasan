@@ -45,18 +45,24 @@ export default function Dashboard() {
         }
     };
 
+    const formatDate = (d) => {
+        const date = new Date(d);
+        return `${String(date.getDate()).padStart(2, '0')}/${String(date.getMonth() + 1).padStart(2, '0')}/${date.getFullYear()} ${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`;
+    };
+
     if (loading) return <div className="flex justify-center mt-20"><Loader2 className="w-8 h-8 animate-spin" style={{ color: '#7852ff' }} /></div>;
 
     return (
         <div>
-            <div className="flex items-center justify-between mb-8">
-                <h1 className="text-3xl font-bold text-slate-800">Müraciətlər Paneli</h1>
-                <span className="px-4 py-2 rounded-full font-bold text-sm" style={{ backgroundColor: '#7852ff20', color: '#7852ff' }}>Cəmi: {appeals.length}</span>
+            <div className="flex items-center justify-between mb-6 sm:mb-8">
+                <h1 className="text-2xl sm:text-3xl font-bold text-slate-800">Müraciətlər Paneli</h1>
+                <span className="px-3 sm:px-4 py-2 rounded-full font-bold text-sm" style={{ backgroundColor: '#7852ff20', color: '#7852ff' }}>Cəmi: {appeals.length}</span>
             </div>
 
             {error && <div className="mb-6 bg-red-50 text-red-600 p-4 rounded-xl">{error}</div>}
 
-            <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+            {/* Desktop table */}
+            <div className="hidden md:block bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
                 <table className="w-full">
                     <thead className="bg-slate-50 border-b border-slate-200">
                         <tr>
@@ -88,7 +94,7 @@ export default function Dashboard() {
                                     {appeal.citizenId?.firstName} {appeal.citizenId?.lastName}
                                 </td>
                                 <td className="px-6 py-4">{statusBadge(appeal.status)}</td>
-                                <td className="px-6 py-4 text-slate-500 text-sm">{(() => { const d = new Date(appeal.createdAt); return `${String(d.getDate()).padStart(2, '0')}/${String(d.getMonth() + 1).padStart(2, '0')}/${d.getFullYear()} ${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`; })()}</td>
+                                <td className="px-6 py-4 text-slate-500 text-sm">{formatDate(appeal.createdAt)}</td>
                             </tr>
                         ))}
                         {appeals.length === 0 && (
@@ -96,6 +102,35 @@ export default function Dashboard() {
                         )}
                     </tbody>
                 </table>
+            </div>
+
+            {/* Mobile cards */}
+            <div className="md:hidden space-y-3">
+                {appeals.map((appeal) => (
+                    <div
+                        key={appeal._id}
+                        onClick={() => navigate(`/verify/${appeal._id}`)}
+                        className="bg-white rounded-xl shadow-sm border border-slate-200 p-4 cursor-pointer active:bg-purple-50/50 transition"
+                    >
+                        <div className="flex items-start justify-between mb-2">
+                            <h3 className="font-semibold text-slate-800 text-sm flex-1 mr-2">{appeal.title || appeal.category || '—'}</h3>
+                            {statusBadge(appeal.status)}
+                        </div>
+                        <div className="flex flex-wrap gap-2 mb-2">
+                            <span className="bg-slate-100 text-slate-700 px-2 py-0.5 rounded text-xs font-medium">{catAz[appeal.category] || appeal.category || '—'}</span>
+                            <span className={`px-2 py-0.5 rounded text-xs font-semibold ${appeal.priority === 'Critical' ? 'bg-red-100 text-red-700' : appeal.priority === 'High' ? 'bg-orange-100 text-orange-700' : appeal.priority === 'Medium' ? 'bg-yellow-100 text-yellow-700' : 'bg-green-100 text-green-700'}`}>
+                                {priAz[appeal.priority] || appeal.priority || '—'}
+                            </span>
+                        </div>
+                        <div className="flex items-center justify-between text-xs text-slate-500">
+                            <span>{appeal.citizenId?.firstName} {appeal.citizenId?.lastName}</span>
+                            <span>{formatDate(appeal.createdAt)}</span>
+                        </div>
+                    </div>
+                ))}
+                {appeals.length === 0 && (
+                    <div className="text-center py-12 text-slate-400 bg-white rounded-xl border border-slate-200">Müraciət tapılmadı</div>
+                )}
             </div>
         </div>
     );

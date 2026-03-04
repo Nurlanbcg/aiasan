@@ -45,11 +45,11 @@ export default function MyAppeals() {
     if (loading) return <div className="flex justify-center mt-20"><Loader2 className="w-8 h-8 animate-spin text-blue-600" /></div>;
 
     return (
-        <div className="max-w-4xl mx-auto px-4 py-8">
-            <div className="flex items-center justify-between mb-8">
-                <h1 className="text-3xl font-bold text-slate-800">Müraciətlərim</h1>
-                <Link to="/submit" className="bg-blue-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-blue-700 transition flex items-center gap-2 text-sm">
-                    <PlusCircle className="w-4 h-4" /> Yeni Müraciət
+        <div className="max-w-4xl mx-auto px-4 py-6 sm:py-8">
+            <div className="flex items-center justify-between mb-6 sm:mb-8">
+                <h1 className="text-2xl sm:text-3xl font-bold text-slate-800">Müraciətlərim</h1>
+                <Link to="/submit" className="bg-blue-600 text-white px-3 sm:px-4 py-2 rounded-lg font-medium hover:bg-blue-700 transition flex items-center gap-2 text-sm">
+                    <PlusCircle className="w-4 h-4" /> <span className="hidden sm:inline">Yeni Müraciət</span><span className="sm:hidden">Yeni</span>
                 </Link>
             </div>
 
@@ -63,9 +63,9 @@ export default function MyAppeals() {
             ) : (
                 <div className="space-y-4">
                     {appeals.map((appeal) => (
-                        <Link key={appeal._id} to={`/appeals/${appeal._id}`} className="block bg-white p-5 rounded-2xl shadow-sm border border-slate-200 flex gap-4 hover:border-blue-300 hover:shadow-md transition cursor-pointer">
+                        <Link key={appeal._id} to={`/appeals/${appeal._id}`} className="block bg-white p-4 sm:p-5 rounded-2xl shadow-sm border border-slate-200 flex gap-3 sm:gap-4 hover:border-blue-300 hover:shadow-md transition cursor-pointer">
                             {appeal.initialMediaId?.url && (
-                                <img src={`http://localhost:5000${appeal.initialMediaId.url}`} alt="" className="w-24 h-24 rounded-xl object-cover bg-slate-100 shrink-0" />
+                                <img src={`http://localhost:5000${appeal.initialMediaId.url}`} alt="" className="w-16 h-16 sm:w-24 sm:h-24 rounded-xl object-cover bg-slate-100 shrink-0" />
                             )}
                             <div className="flex-1 min-w-0">
                                 <div className="flex items-start justify-between gap-4">

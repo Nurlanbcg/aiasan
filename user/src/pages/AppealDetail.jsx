@@ -42,7 +42,7 @@ export default function AppealDetail() {
     if (!appeal) return <div className="flex justify-center mt-20"><Loader2 className="w-8 h-8 animate-spin text-blue-600" /></div>;
 
     return (
-        <div className="max-w-3xl mx-auto px-4 py-8">
+        <div className="max-w-3xl mx-auto px-4 py-6 sm:py-8">
             <Link to="/my-appeals" className="inline-flex items-center gap-2 text-slate-500 hover:text-blue-600 mb-6 font-medium transition">
                 <ArrowLeft className="w-5 h-5" /> Müraciətlərimə Qayıt
             </Link>
@@ -53,10 +53,10 @@ export default function AppealDetail() {
                     <img src={`http://localhost:5000${appeal.initialMediaId.url}`} alt="Müraciət" className="w-full max-h-80 object-cover" />
                 )}
 
-                <div className="p-6 space-y-6">
+                <div className="p-4 sm:p-6 space-y-4 sm:space-y-6">
                     {/* Header */}
                     <div className="flex items-start justify-between gap-4">
-                        <h1 className="text-2xl font-bold text-slate-800">{appeal.title || appeal.category || 'Müraciət'}</h1>
+                        <h1 className="text-xl sm:text-2xl font-bold text-slate-800">{appeal.title || appeal.category || 'Müraciət'}</h1>
                         {statusBadge(appeal.status)}
                     </div>
 
@@ -69,7 +69,7 @@ export default function AppealDetail() {
                     )}
 
                     {/* Info Row */}
-                    <div className="grid grid-cols-3 gap-4">
+                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4">
                         <div>
                             <label className="text-xs text-slate-500 font-semibold uppercase block mb-1">Kateqoriya</label>
                             <span className="bg-slate-100 text-slate-700 px-3 py-1 rounded text-sm font-semibold">{catAz[appeal.category] || appeal.category || '—'}</span>
@@ -96,24 +96,28 @@ export default function AppealDetail() {
                         <span>Göndərilmə tarixi: {(() => { const d = new Date(appeal.createdAt); return `${String(d.getDate()).padStart(2, '0')}/${String(d.getMonth() + 1).padStart(2, '0')}/${d.getFullYear()} ${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`; })()}</span>
                     </div>
 
-                    {/* Rejection Reason */}
+                    {/* Rejection Reason - only for Rejected status */}
                     {appeal.status === 'Rejected' && appeal.rejectionReason && (
-                        <div className="bg-red-50 border border-red-200 p-4 rounded-xl">
-                            <label className="text-xs text-red-600 font-semibold uppercase block mb-1">Rədd etmə səbəbi</label>
-                            <p className="text-red-700 text-sm leading-relaxed">{appeal.rejectionReason}</p>
+                        <div className="pt-4 border-t border-slate-100">
+                            <h3 className="text-sm font-bold text-slate-800 uppercase mb-3">Rədd Səbəbi</h3>
+                            <div className="bg-red-50 border border-red-200 p-4 rounded-xl flex items-start gap-3">
+                                <AlertCircle className="w-5 h-5 text-red-600 shrink-0 mt-0.5" />
+                                <div>
+                                    <p className="font-bold text-red-800">Müraciət Rədd Edildi</p>
+                                    <p className="text-red-700 text-sm mt-1 leading-relaxed">{appeal.rejectionReason}</p>
+                                </div>
+                            </div>
                         </div>
                     )}
 
-                    {/* Verification Result */}
-                    {appeal.verification && (
+                    {/* Verification Result - only for Resolved status */}
+                    {appeal.status === 'Resolved' && appeal.verification && (
                         <div className="pt-4 border-t border-slate-100">
-                            <h3 className="text-sm font-bold text-slate-800 uppercase mb-3">Yoxlama Nəticəsi</h3>
-                            <div className={`p-4 rounded-xl flex items-start gap-3 ${appeal.verification.mismatch_warning ? 'bg-red-50 border border-red-200' : 'bg-green-50 border border-green-200'}`}>
-                                {appeal.verification.mismatch_warning ? <AlertCircle className="w-5 h-5 text-red-600 shrink-0 mt-0.5" /> : <CheckCircle2 className="w-5 h-5 text-green-600 shrink-0 mt-0.5" />}
-                                <div>
-                                    <p className={`font-bold ${appeal.verification.mismatch_warning ? 'text-red-800' : 'text-green-800'}`}>
-                                        {appeal.verification.mismatch_warning ? 'Uyğunsuzluq Aşkarlandı' : 'Həll Təsdiqləndi'}
-                                    </p>
+                            <h3 className="text-sm font-bold text-slate-800 uppercase mb-3">Həll Detalları</h3>
+                            <div className="bg-green-50 border border-green-200 p-4 rounded-xl flex items-start gap-3">
+                                <CheckCircle2 className="w-5 h-5 text-green-600 shrink-0 mt-0.5" />
+                                <div className="flex-1">
+                                    <p className="font-bold text-green-800">Həll Təsdiqləndi</p>
                                     <div className="grid grid-cols-2 gap-3 mt-3 text-sm">
                                         <div className="flex justify-between bg-white/70 p-2 rounded">
                                             <span className="text-slate-600">Eyni Məkan</span>
@@ -122,10 +126,6 @@ export default function AppealDetail() {
                                         <div className="flex justify-between bg-white/70 p-2 rounded">
                                             <span className="text-slate-600">Problem Həll Olunub</span>
                                             <span className="font-bold">{appeal.verification.issue_resolved ? '✅' : '❌'}</span>
-                                        </div>
-                                        <div className="flex justify-between bg-white/70 p-2 rounded">
-                                            <span className="text-slate-600">Sİ ilə Yaradılıb</span>
-                                            <span className={`font-bold ${appeal.verification.is_ai_generated ? 'text-red-600' : 'text-green-600'}`}>{appeal.verification.is_ai_generated ? '⚠️' : '✅'}</span>
                                         </div>
                                         <div className="flex justify-between bg-white/70 p-2 rounded">
                                             <span className="text-slate-600">Etibarlılıq</span>

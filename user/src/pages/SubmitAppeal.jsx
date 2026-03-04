@@ -186,8 +186,8 @@ export default function SubmitAppeal() {
     };
 
     return (
-        <div className="max-w-2xl mx-auto px-4 py-8">
-            <h1 className="text-3xl font-bold text-slate-800 mb-8">Müraciət Göndər</h1>
+        <div className="max-w-2xl mx-auto px-4 py-6 sm:py-8">
+            <h1 className="text-2xl sm:text-3xl font-bold text-slate-800 mb-6 sm:mb-8">Müraciət Göndər</h1>
 
             {error && <div className="mb-6 bg-red-50 text-red-600 p-4 rounded-xl">{error}</div>}
 

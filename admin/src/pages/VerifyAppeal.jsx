@@ -25,6 +25,7 @@ export default function VerifyAppeal() {
     const [isSaving, setIsSaving] = useState(false);
     const [showRejectModal, setShowRejectModal] = useState(false);
     const [rejectReason, setRejectReason] = useState('');
+    const [capturedFromCamera, setCapturedFromCamera] = useState(false);
     const videoRef = useRef(null);
     const streamRef = useRef(null);
 
@@ -88,6 +89,7 @@ export default function VerifyAppeal() {
             const capturedFile = new File([blob], `resolution_${Date.now()}.jpg`, { type: 'image/jpeg' });
             setFile(capturedFile);
             setPreview(URL.createObjectURL(blob));
+            setCapturedFromCamera(true);
         }, 'image/jpeg', 0.92);
     };
 
@@ -97,6 +99,7 @@ export default function VerifyAppeal() {
         setError('');
         const formData = new FormData();
         formData.append('resolutionMedia', file);
+        if (capturedFromCamera) formData.append('capturedFromCamera', 'true');
         try {
             const res = await axios.post(`http://localhost:5000/api/appeals/${id}/verify`, formData, {
                 headers: {
@@ -123,9 +126,9 @@ export default function VerifyAppeal() {
                 <ArrowLeft className="w-5 h-5" /> Panelə Qayıt
             </Link>
 
-            <div className="flex items-center justify-between mb-8">
-                <h1 className="text-3xl font-bold text-slate-800">Həllin Yoxlanması</h1>
-                <span className={`px-4 py-2 rounded-full font-bold text-sm ${appeal?.status === 'Pending Review' ? 'bg-purple-100 text-purple-700' : appeal?.status === 'Resolved' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 sm:mb-8 gap-3">
+                <h1 className="text-2xl sm:text-3xl font-bold text-slate-800">Həllin Yoxlanması</h1>
+                <span className={`px-3 sm:px-4 py-2 rounded-full font-bold text-xs sm:text-sm ${appeal?.status === 'Pending Review' ? 'bg-purple-100 text-purple-700' : appeal?.status === 'Resolved' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
                     Status: {appeal?.status === 'Pending Review' ? 'Gözləmədə' : appeal?.status === 'Resolved' ? 'Həll olunub' : appeal?.status === 'Mismatch - Return Back' ? 'Uyğunsuzluq - Geri Qaytarılıb' : appeal?.status === 'Rejected' ? 'Rədd edilib' : appeal?.status}
                 </span>
             </div>
@@ -135,7 +138,7 @@ export default function VerifyAppeal() {
             <div className="max-w-5xl mx-auto">
                 {/* Show Reported Problem - always visible (except during upload) */}
                 {!showUpload && (
-                    <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+                    <div className="bg-white p-4 sm:p-6 rounded-2xl shadow-sm border border-slate-200">
                         <h2 className="text-xl font-bold text-slate-800 mb-6 pb-2 border-b flex items-center justify-between">
                             Bildirilən Problem
                             {!isEditing && (
@@ -219,7 +222,7 @@ export default function VerifyAppeal() {
                                         </div>
                                     )}
                                 </div>
-                                {(!appeal?.verification || (appeal?.verification?.mismatch_warning && appeal?.status !== 'Resolved')) && (
+                                {appeal?.status === 'Pending Review' && (
                                     <div className="pt-6 mt-4 border-t border-slate-100 flex gap-3">
                                         {isEditing ? (
                                             <>
@@ -358,7 +361,7 @@ export default function VerifyAppeal() {
 
                 {/* Step 3: Result - only show after verification in current session */}
                 {showResult && appeal?.verification && (
-                    <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+                    <div className="bg-white p-4 sm:p-6 rounded-2xl shadow-sm border border-slate-200">
                         <h2 className="text-xl font-bold text-slate-800 mb-4 pb-2 border-b">Həll Nəticəsi</h2>
                         <div className={`p-4 rounded-xl mb-6 flex items-start gap-3 ${appeal.verification.mismatch_warning ? 'bg-red-50 border border-red-200' : 'bg-green-50 border border-green-200'}`}>
                             {appeal.verification.mismatch_warning ? <AlertTriangle className="w-6 h-6 text-red-600 shrink-0" /> : <CheckCircle className="w-6 h-6 text-green-600 shrink-0" />}

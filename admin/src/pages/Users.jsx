@@ -68,16 +68,17 @@ export default function Users() {
 
     return (
         <div>
-            <div className="flex items-center justify-between mb-8">
-                <h1 className="text-3xl font-bold text-slate-800">Admin İstifadəçilər</h1>
-                <button onClick={openCreate} className="text-white px-4 py-2 rounded-lg font-medium hover:opacity-90 transition flex items-center gap-2" style={{ backgroundColor: '#7852ff' }}>
-                    <Plus className="w-4 h-4" /> Admin Əlavə Et
+            <div className="flex items-center justify-between mb-6 sm:mb-8">
+                <h1 className="text-2xl sm:text-3xl font-bold text-slate-800">Admin İstifadəçilər</h1>
+                <button onClick={openCreate} className="text-white px-3 sm:px-4 py-2 rounded-lg font-medium hover:opacity-90 transition flex items-center gap-2 text-sm" style={{ backgroundColor: '#7852ff' }}>
+                    <Plus className="w-4 h-4" /> <span className="hidden sm:inline">Admin Əlavə Et</span><span className="sm:hidden">Əlavə Et</span>
                 </button>
             </div>
 
             {error && <div className="mb-6 bg-red-50 text-red-600 p-4 rounded-xl">{error}</div>}
 
-            <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+            {/* Desktop table */}
+            <div className="hidden md:block bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
                 <table className="w-full">
                     <thead className="bg-slate-50 border-b border-slate-200">
                         <tr>
@@ -105,10 +106,33 @@ export default function Users() {
                 </table>
             </div>
 
+            {/* Mobile cards */}
+            <div className="md:hidden space-y-3">
+                {users.map((u) => (
+                    <div key={u._id} className="bg-white rounded-xl shadow-sm border border-slate-200 p-4">
+                        <div className="flex items-center justify-between mb-2">
+                            <h3 className="font-semibold text-slate-800">{u.firstName} {u.lastName}</h3>
+                            <span className="px-2 py-1 rounded text-xs font-bold uppercase" style={{ backgroundColor: '#7852ff20', color: '#7852ff' }}>{u.role}</span>
+                        </div>
+                        <p className="text-sm text-slate-500 mb-3">{u.email}</p>
+                        <div className="flex gap-2">
+                            <button onClick={() => openEdit(u)} className="flex-1 text-sm font-medium py-2 rounded-lg transition flex items-center justify-center gap-1" style={{ color: '#7852ff', backgroundColor: '#7852ff10' }}>
+                                <Pencil className="w-3.5 h-3.5" /> Redaktə
+                            </button>
+                            {u._id !== currentUserId && (
+                                <button onClick={() => handleDelete(u._id)} className="flex-1 bg-red-50 text-red-600 text-sm font-medium py-2 rounded-lg hover:bg-red-100 transition flex items-center justify-center gap-1">
+                                    <Trash2 className="w-3.5 h-3.5" /> Sil
+                                </button>
+                            )}
+                        </div>
+                    </div>
+                ))}
+            </div>
+
             {/* Modal */}
             {showModal && (
-                <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-                    <div className="bg-white rounded-2xl p-8 w-full max-w-md shadow-2xl">
+                <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+                    <div className="bg-white rounded-2xl p-6 sm:p-8 w-full max-w-md shadow-2xl">
                         <div className="flex justify-between items-center mb-6">
                             <h2 className="text-xl font-bold">{editUser ? 'İstifadəçini Redaktə Et' : 'Admin Yarat'}</h2>
                             <button onClick={() => setShowModal(false)} className="p-1 hover:bg-slate-100 rounded-lg"><X className="w-5 h-5" /></button>
