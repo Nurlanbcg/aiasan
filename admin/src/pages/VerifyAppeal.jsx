@@ -33,7 +33,7 @@ export default function VerifyAppeal() {
     useEffect(() => {
         const fetchAppeal = async () => {
             try {
-                const res = await axios.get(`/api/appeals/${id}`, {
+                const res = await axios.get(`${API_URL}/api/appeals/${id}`, {
                     headers: { Authorization: `Bearer ${localStorage.getItem('asanAdminToken')}` }
                 });
                 if (res.data.success) {
@@ -102,7 +102,7 @@ export default function VerifyAppeal() {
         formData.append('resolutionMedia', file);
         if (capturedFromCamera) formData.append('capturedFromCamera', 'true');
         try {
-            const res = await axios.post(`/api/appeals/${id}/verify`, formData, {
+            const res = await axios.post(`${API_URL}/api/appeals/${id}/verify`, formData, {
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('asanAdminToken')}`,
                     'Content-Type': 'multipart/form-data'
@@ -151,7 +151,7 @@ export default function VerifyAppeal() {
                         <div className="grid md:grid-cols-2 gap-8">
                             <div>
                                 <img
-                                    src={`${appeal?.initialMediaId?.url}`}
+                                    src={`${API_URL}${appeal?.initialMediaId?.url}`}
                                     alt="Original Issue"
                                     className="w-full rounded-xl bg-slate-100 object-cover h-full max-h-[500px]"
                                 />
@@ -230,7 +230,7 @@ export default function VerifyAppeal() {
                                                 <button disabled={isSaving} onClick={async () => {
                                                     setIsSaving(true);
                                                     try {
-                                                        const res = await axios.put(`/api/appeals/${id}`, editForm, { headers: { Authorization: `Bearer ${localStorage.getItem('asanAdminToken')}` } });
+                                                        const res = await axios.put(`${API_URL}/api/appeals/${id}`, editForm, { headers: { Authorization: `Bearer ${localStorage.getItem('asanAdminToken')}` } });
                                                         if (res.data.success) { setAppeal(res.data.data.appeal); setIsEditing(false); }
                                                     } catch (err) { setError(err.response?.data?.error?.message || 'Yeniləmə uğursuz oldu'); }
                                                     finally { setIsSaving(false); }
@@ -276,7 +276,7 @@ export default function VerifyAppeal() {
                                     disabled={!rejectReason.trim()}
                                     onClick={async () => {
                                         try {
-                                            await axios.put(`/api/appeals/${id}`, { status: 'Rejected', rejectionReason: rejectReason.trim() }, { headers: { Authorization: `Bearer ${localStorage.getItem('asanAdminToken')}` } });
+                                            await axios.put(`${API_URL}/api/appeals/${id}`, { status: 'Rejected', rejectionReason: rejectReason.trim() }, { headers: { Authorization: `Bearer ${localStorage.getItem('asanAdminToken')}` } });
                                             navigate('/');
                                         } catch (err) { setError(err.response?.data?.error?.message || 'Rədd etmə uğursuz oldu'); setShowRejectModal(false); }
                                     }}
@@ -455,7 +455,7 @@ export default function VerifyAppeal() {
                                         onClick={async () => {
                                             setError('');
                                             try {
-                                                const res = await axios.post(`/api/appeals/${appeal._id}/resolve`, {}, {
+                                                const res = await axios.post(`${API_URL}/api/appeals/${appeal._id}/resolve`, {}, {
                                                     headers: { Authorization: `Bearer ${localStorage.getItem('asanAdminToken')}` }
                                                 });
                                                 if (res.data.success) setAppeal(res.data.data.appeal);
