@@ -366,9 +366,15 @@ export default function VerifyAppeal() {
                                 <h4 className={`font-bold ${appeal.verification.mismatch_warning ? 'text-red-800' : 'text-green-800'}`}>
                                     {appeal.verification.mismatch_warning ? 'Uyğunsuzluq Aşkarlandı' : 'Təsdiqləndi – Həllə Hazır'}
                                 </h4>
-                                <p className={`text-sm mt-1 ${appeal.verification.mismatch_warning ? 'text-red-600' : 'text-green-600'}`}>
-                                    Vizual müqayisəyə əsasən, Sİ yekun qərar verdi.
-                                </p>
+                                {appeal.verification.mismatch_warning ? (
+                                    <ul className="text-sm mt-1 text-red-600 list-disc list-inside space-y-0.5">
+                                        {!appeal.verification.same_location && <li>Şəkillər eyni məkandan deyil</li>}
+                                        {!appeal.verification.issue_resolved && <li>Problem həll olunmayıb</li>}
+                                        {appeal.verification.is_ai_generated && <li>Şəkil Sİ ilə yaradılmış və ya saxtalaşdırılmışdır</li>}
+                                    </ul>
+                                ) : (
+                                    <p className="text-sm mt-1 text-green-600">Vizual müqayisəyə əsasən, Sİ yekun qərar verdi.</p>
+                                )}
                             </div>
                         </div>
 
@@ -405,6 +411,7 @@ export default function VerifyAppeal() {
                                         {appeal.verification.is_ai_generated ? 'Bəli' : 'Xeyr'}
                                     </span>
                                 </div>
+
                             </div>
                             <div className="p-4 rounded-xl border bg-purple-50 border-purple-200">
                                 <p className="text-xs font-semibold text-slate-500 uppercase mb-2">Sİ Etibarlılıq</p>
@@ -416,26 +423,6 @@ export default function VerifyAppeal() {
                                 </div>
                             </div>
                         </div>
-
-                        {!appeal.verification.mismatch_warning && appeal.status !== 'Resolved' && (
-                            <button
-                                onClick={async () => {
-                                    setError('');
-                                    try {
-                                        const res = await axios.post(`http://localhost:5000/api/appeals/${appeal._id}/resolve`, {}, {
-                                            headers: { Authorization: `Bearer ${localStorage.getItem('asanAdminToken')}` }
-                                        });
-                                        if (res.data.success) setAppeal(res.data.data.appeal);
-                                    } catch (err) {
-                                        setError(err.response?.data?.error?.message || 'Həll etmə uğursuz oldu.');
-                                    }
-                                }}
-                                className="mt-8 w-full text-white hover:opacity-90 font-bold py-3 rounded-xl transition flex justify-center items-center gap-2"
-                                style={{ backgroundColor: '#7852ff' }}
-                            >
-                                <CheckCircle className="w-5 h-5" /> Müraciəti Həll Et
-                            </button>
-                        )}
 
                         {appeal.verification.mismatch_warning && (
                             <div className="flex gap-4 mt-8">
@@ -449,7 +436,7 @@ export default function VerifyAppeal() {
                                     className="flex-1 text-white hover:opacity-90 font-bold py-3 rounded-xl transition flex justify-center items-center gap-2"
                                     style={{ backgroundColor: '#7852ff' }}
                                 >
-                                    <UploadCloud className="w-5 h-5" /> Yenidən Yoxla
+                                    <UploadCloud className="w-5 h-5" /> Yenidən Cəhd Et
                                 </button>
                                 <button onClick={() => navigate('/')} className="flex-1 bg-slate-100 text-slate-700 hover:bg-slate-200 font-bold py-3 rounded-xl transition">
                                     Panelə Qayıt
@@ -458,9 +445,30 @@ export default function VerifyAppeal() {
                         )}
 
                         {!appeal.verification.mismatch_warning && (
-                            <button onClick={() => navigate('/')} className="w-full bg-slate-100 text-slate-700 hover:bg-slate-200 font-bold py-3 rounded-xl transition mt-8">
-                                Panelə Qayıt
-                            </button>
+                            <div className="flex gap-4 mt-8">
+                                {appeal.status !== 'Resolved' && (
+                                    <button
+                                        onClick={async () => {
+                                            setError('');
+                                            try {
+                                                const res = await axios.post(`http://localhost:5000/api/appeals/${appeal._id}/resolve`, {}, {
+                                                    headers: { Authorization: `Bearer ${localStorage.getItem('asanAdminToken')}` }
+                                                });
+                                                if (res.data.success) setAppeal(res.data.data.appeal);
+                                            } catch (err) {
+                                                setError(err.response?.data?.error?.message || 'Həll etmə uğursuz oldu.');
+                                            }
+                                        }}
+                                        className="flex-1 text-white hover:opacity-90 font-bold py-3 rounded-xl transition flex justify-center items-center gap-2"
+                                        style={{ backgroundColor: '#7852ff' }}
+                                    >
+                                        <CheckCircle className="w-5 h-5" /> Müraciəti Həll Et
+                                    </button>
+                                )}
+                                <button onClick={() => navigate('/')} className="flex-1 bg-slate-100 text-slate-700 hover:bg-slate-200 font-bold py-3 rounded-xl transition">
+                                    Panelə Qayıt
+                                </button>
+                            </div>
                         )}
                     </div>
                 )}

@@ -18,6 +18,8 @@ const ConfidenceScoresSchema = new mongoose.Schema({
 const VerificationSchema = new mongoose.Schema({
     same_location: { type: Boolean },
     issue_resolved: { type: Boolean },
+    is_ai_generated: { type: Boolean },
+    ai_detection_reason: { type: String },
     mismatch_warning: { type: Boolean },
     confidence: { type: Number },
     verifiedAt: { type: Date },

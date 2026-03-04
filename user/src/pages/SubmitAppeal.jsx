@@ -55,7 +55,14 @@ export default function SubmitAppeal() {
     const startCamera = async () => {
         setError('');
 
-        // Step 2: Open camera
+        // Get GPS location while opening camera
+        const browserLoc = await getBrowserLocation();
+        if (browserLoc) {
+            setLocation(browserLoc);
+            setLocationSource('gps');
+        }
+
+        // Open camera
         try {
             const stream = await navigator.mediaDevices.getUserMedia({
                 video: { facingMode: 'environment', width: { ideal: 1920 }, height: { ideal: 1080 } }
@@ -114,7 +121,6 @@ export default function SubmitAppeal() {
             return;
         }
 
-        // No EXIF location found
     };
 
     const handleAnalyze = async () => {

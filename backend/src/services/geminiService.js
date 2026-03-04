@@ -77,13 +77,26 @@ export const verifyResolutionMedia = async (originalFilePath, originalMimeType, 
     const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
     const prompt = `
-  You are an AI auditing an issue resolution for a citizen appeal platform.
+  You are an expert AI forensics analyst auditing an issue resolution for a citizen appeal platform.
   I am providing two images. First is the "Before" (the reported issue). Second is the "After" (the purported resolution).
   
   Compare them and determine:
-  1. Are they from the same location?
+  1. Are they from the same location? (Compare landmarks, buildings, road features, vegetation, angles)
   2. Is the issue actually resolved in the "After" image?
-  3. Does the "After" image appear to be generated or manipulated by AI?
+  3. CRITICAL - Is the "After" image AI-generated, manipulated, or fake? You MUST be VERY STRICT about this. 
+  
+  AI-GENERATED IMAGE DETECTION GUIDELINES (apply ALL of these):
+  - Look for unnaturally smooth or perfect surfaces (real pavements have imperfections, cracks, dirt, stains)
+  - Check for warped or distorted edges, especially around objects meeting backgrounds
+  - Look for inconsistent lighting, shadows that don't match light sources
+  - Check for impossible or unrealistic geometry in bricks, tiles, or pavement patterns
+  - Look for blurry or smeared areas, especially at object boundaries
+  - Check if textures repeat unnaturally or have "dreamy" quality
+  - Real photos have noise/grain, especially in low light - AI images are often too clean
+  - Check for AI watermarks or artifacts in corners (e.g., small symbols)
+  - If the "After" image looks "too perfect" or "too clean" compared to the "Before", it is likely AI-generated
+  - Compare the photographic style: real phone photos have lens distortion, natural white balance variation
+  - If there is ANY doubt, mark is_ai_generated as TRUE. Err on the side of caution.
   
   You MUST return ONLY a valid JSON object matching exactly this structure:
   {
@@ -91,7 +104,8 @@ export const verifyResolutionMedia = async (originalFilePath, originalMimeType, 
     "issue_resolved": true/false,
     "is_ai_generated": true/false,
     "mismatch_warning": true/false (true if they are not the same location OR the issue isn't resolved OR it is AI generated),
-    "confidence": Number between 0 and 1
+    "confidence": Number between 0 and 1,
+    "ai_detection_reason": "Brief explanation of why the image was or wasn't flagged as AI-generated"
   }
   `;
 
