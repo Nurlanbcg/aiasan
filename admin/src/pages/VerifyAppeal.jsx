@@ -1,13 +1,27 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
-import { UploadCloud, CheckCircle, AlertTriangle, ArrowLeft, Loader2, MapPin, Camera, Image, X, Pencil } from 'lucide-react';
+import { UploadCloud, CheckCircle, AlertTriangle, ArrowLeft, Loader2, MapPin, Camera, Image, X, Pencil, Download } from 'lucide-react';
 import { API_URL } from '../config';
 
 const catAz = { 'Roads & Transport': 'Yollar və Nəqliyyat', 'Utilities': 'Kommunal Xidmətlər', 'Parks & Environment': 'Parklar və Ətraf Mühit', 'Public Safety': 'İctimai Təhlükəsizlik', 'Waste Management': 'Tullantıların İdarə Edilməsi', 'Building & Infrastructure': 'Bina və İnfrastruktur', 'Other': 'Digər' };
 const priAz = { 'Low': 'Aşağı', 'Medium': 'Orta', 'High': 'Yüksək', 'Critical': 'Kritik' };
 const categories = ['Roads & Transport', 'Utilities', 'Parks & Environment', 'Public Safety', 'Waste Management', 'Building & Infrastructure', 'Other'];
 const priorities = ['Low', 'Medium', 'High', 'Critical'];
+
+const downloadImage = async (url) => {
+    try {
+        const res = await fetch(url);
+        const blob = await res.blob();
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = url.split('/').pop() || 'image';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(a.href);
+    } catch { window.open(url, '_blank'); }
+};
 
 export default function VerifyAppeal() {
     const { id } = useParams();
@@ -150,11 +164,16 @@ export default function VerifyAppeal() {
                         </h2>
                         <div className="grid md:grid-cols-2 gap-8">
                             <div>
-                                <img
-                                    src={`${API_URL}${appeal?.initialMediaId?.url}`}
-                                    alt="Original Issue"
-                                    className="w-full rounded-xl bg-slate-100 object-cover h-full max-h-[500px]"
-                                />
+                                <div className="relative">
+                                    <button onClick={() => downloadImage(`${API_URL}${appeal?.initialMediaId?.url}`)} className="absolute top-3 right-3 bg-white/80 hover:bg-white text-slate-700 p-2 rounded-full shadow transition z-10">
+                                        <Download className="w-4 h-4" />
+                                    </button>
+                                    <img
+                                        src={`${API_URL}${appeal?.initialMediaId?.url}`}
+                                        alt="Original Issue"
+                                        className="w-full rounded-xl bg-slate-100 object-cover h-full max-h-[500px]"
+                                    />
+                                </div>
                             </div>
                             <div className="flex flex-col justify-between space-y-4">
                                 <div className="space-y-4">

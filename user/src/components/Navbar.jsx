@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { LogOut, FileText, ChevronDown, Menu, X } from 'lucide-react';
+import { LogOut, ClipboardList, ChevronDown, Menu, X } from 'lucide-react';
 
 export default function Navbar() {
     const navigate = useNavigate();
@@ -59,7 +59,7 @@ export default function Navbar() {
                                         onClick={() => setOpen(false)}
                                         className="flex items-center gap-3 px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50 transition"
                                     >
-                                        <FileText className="w-4 h-4 text-slate-400" />
+                                        <ClipboardList className="w-4 h-4 text-slate-400" />
                                         Müraciətlərim
                                     </Link>
                                     <div className="border-t border-slate-100 my-1" />
@@ -110,7 +110,7 @@ export default function Navbar() {
                         onClick={() => setMobileOpen(false)}
                         className="flex items-center gap-3 px-4 py-3 text-sm text-slate-700 hover:bg-slate-50 transition"
                     >
-                        <FileText className="w-4 h-4 text-slate-400" />
+                        <ClipboardList className="w-4 h-4 text-slate-400" />
                         Müraciətlərim
                     </Link>
                     <button
