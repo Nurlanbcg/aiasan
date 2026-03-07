@@ -365,9 +365,9 @@ export default function VerifyAppeal() {
 
                         {!cameraActive && preview && (
                             <div className="flex gap-4">
-                                <button onClick={handleVerify} disabled={!file || isVerifying} className="flex-1 bg-slate-900 text-white font-bold py-4 rounded-xl disabled:opacity-50 hover:opacity-90 transition flex items-center justify-center gap-2" style={{ backgroundColor: '#7852ff' }}>
-                                    {isVerifying ? <Loader2 className="w-5 h-5 animate-spin" /> : <CheckCircle className="w-5 h-5" />}
-                                    {isVerifying ? 'Sİ yoxlayır...' : 'Həlli Yoxla'}
+                                <button onClick={handleVerify} disabled={!file || isVerifying} className="flex-1 bg-slate-900 text-white font-bold py-4 rounded-xl disabled:opacity-50 hover:opacity-90 transition flex items-center justify-center gap-2 whitespace-nowrap" style={{ backgroundColor: '#7852ff' }}>
+                                    {isVerifying ? <Loader2 className="w-5 h-5 animate-spin shrink-0" /> : <CheckCircle className="w-5 h-5 shrink-0" />}
+                                    <span>{isVerifying ? 'Sİ yoxlayır...' : 'Həlli Yoxla'}</span>
                                 </button>
                                 <button onClick={() => { setFile(null); setPreview(null); }} className="flex-1 bg-slate-100 text-slate-700 hover:bg-slate-200 font-bold py-4 rounded-xl transition">
                                     Şəkli Dəyiş
