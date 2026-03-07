@@ -81,9 +81,17 @@ export const verifyResolutionMedia = async (originalFilePath, originalMimeType, 
   I am providing two images. First is the "Before" (the reported issue). Second is the "After" (the purported resolution).
   
   Compare them and determine:
-  1. Are they from the same location? (Compare landmarks, buildings, road features, vegetation, angles)
+  1. Are they from the same LOCATION?
   2. Is the issue actually resolved in the "After" image?
   3. CRITICAL - Is the "After" image AI-generated, manipulated, or fake? You MUST be VERY STRICT about this. 
+  
+  SAME LOCATION GUIDELINES (VERY IMPORTANT):
+  - The "Before" and "After" photos will almost ALWAYS be taken from DIFFERENT camera angles, positions, distances, and perspectives. This is COMPLETELY NORMAL and expected — do NOT treat different angles as evidence of a different location.
+  - Focus on shared environmental features to determine same location: nearby buildings, street signs, road markings, curbs, sidewalks, walls, fences, trees, poles, utility infrastructure, terrain shape, and surrounding architecture.
+  - Even if only a FEW recognizable features overlap between the two images, consider them the same location.
+  - Different lighting conditions (day vs evening, sunny vs cloudy) do NOT mean different location.
+  - Different zoom levels or crops do NOT mean different location.
+  - Only mark same_location as FALSE if the surroundings, environment, and context are clearly and obviously from a completely different place with no shared features at all.
   
   AI-GENERATED IMAGE DETECTION GUIDELINES (apply ALL of these):
   - Look for unnaturally smooth or perfect surfaces (real pavements have imperfections, cracks, dirt, stains)
